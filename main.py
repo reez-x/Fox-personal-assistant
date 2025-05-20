@@ -4,9 +4,10 @@ from executor import execute_command
 from rich.live import Live
 from time import sleep
 import speech_recognition as sr
+from vosk_recognizer import listen_to_voice_vosk
 
 # Versi listen yang tidak menggunakan print()
-def listen_to_voice(live, status_text="🦊 Listening...") -> str:
+def listen_to_voice_vosk(live, status_text="🦊 Listening...") -> str:
     r = sr.Recognizer()
     with sr.Microphone() as source:
         live.update(get_fox_panel(status_text))
@@ -43,7 +44,7 @@ def wait_for_wake_word(live):
 
     while True:
         live.update(get_fox_panel("🦊 Say: 'Hello Foxie', 'Hi Foxie', or 'Yo Foxie'"))
-        text = listen_to_voice(live, "🦊 Listening for wake word...")
+        text = listen_to_voice_vosk(live, "🦊 Listening for wake word...")
 
         if text:
             text = text.lower()
@@ -61,7 +62,7 @@ def main():
         sleep(1)
         while True:
             wait_for_wake_word(live)
-            command = listen_to_voice(live, "🦊 Listening for command...")
+            command = listen_to_voice_vosk(live, "🦊 Listening for command...")
             if command:
                 live.update(get_fox_panel(f"🦊 You said: {command}"))
                 action = parse_command(command)
